@@ -2,15 +2,14 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.shagiev.konstantin.daybook.fragments.SplashFragment"
-    android:background="@color/white">
+             tools:context="com.shagiev.konstantin.daybook.fragments.CurrentTaskFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <ImageView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/daybooksplash"
+        android:text="@string/current_task"
         android:layout_gravity="center"
-        android:id="@+id/imageView"/>
+        android:textSize="35sp"/>
 
 </FrameLayout>
