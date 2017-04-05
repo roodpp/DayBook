@@ -7,4 +7,14 @@
     
     <string name="current_task">Текущие дела</string>
     <string name="done_task">Завершенные дела</string>
+
+    <string name="dialog_title">Добавление дела</string>
+    <string name="dialog_ok">ОК</string>
+    <string name="dialog_cancel">Отмена</string>
+    <string name="dialog_error_empty_title">Введите заголовок</string>
+    
+    <string name="task_title">Заголовок</string>
+    <string name="task_date">Дата</string>
+    <string name="task_time">Время</string>
+
 </resources>

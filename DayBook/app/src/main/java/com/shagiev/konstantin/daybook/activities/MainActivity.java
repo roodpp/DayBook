@@ -1,7 +1,9 @@
 package com.shagiev.konstantin.daybook.activities;
 
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,14 +11,17 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 
 import com.shagiev.konstantin.daybook.R;
 import com.shagiev.konstantin.daybook.adapters.TabAdapter;
 import com.shagiev.konstantin.daybook.fragments.SplashFragment;
+import com.shagiev.konstantin.daybook.fragments.dialog.AddingTaskDialogFragment;
 import com.shagiev.konstantin.daybook.helper.PreferencesHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener {
 
 
     private FragmentManager mFragmentManager;
@@ -107,6 +112,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment addingTaskDialogFragment = new AddingTaskDialogFragment();
+                addingTaskDialogFragment.show(mFragmentManager, "AddingTaskDialogFragment");
+            }
+        });
 
+
+    }
+
+    @Override
+    public void onTaskAdded() {
+        Toast.makeText(this, "Дело добавлено", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onTaskAddingCancel() {
+        Toast.makeText(this, "Дело не добавлено", Toast.LENGTH_LONG).show();
     }
 }
