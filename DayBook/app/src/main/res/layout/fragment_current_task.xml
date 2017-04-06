@@ -4,12 +4,13 @@
              android:layout_height="match_parent"
              tools:context="com.shagiev.konstantin.daybook.fragments.CurrentTaskFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/current_task"
-        android:layout_gravity="center"
-        android:textSize="35sp"/>
+   <android.support.v7.widget.RecyclerView
+       android:id="@+id/rvCurrentTasks"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:scrollbars="vertical"
+       android:clipToPadding="false"
+       android:paddingBottom="88dp">
 
+   </android.support.v7.widget.RecyclerView>
 </FrameLayout>

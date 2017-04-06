@@ -17,15 +17,21 @@ import android.widget.Toast;
 
 import com.shagiev.konstantin.daybook.R;
 import com.shagiev.konstantin.daybook.adapters.TabAdapter;
+import com.shagiev.konstantin.daybook.fragments.CurrentTaskFragment;
+import com.shagiev.konstantin.daybook.fragments.DoneTaskFragment;
 import com.shagiev.konstantin.daybook.fragments.SplashFragment;
 import com.shagiev.konstantin.daybook.fragments.dialog.AddingTaskDialogFragment;
 import com.shagiev.konstantin.daybook.helper.PreferencesHelper;
+import com.shagiev.konstantin.daybook.model.Task;
 
 public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener {
 
 
     private FragmentManager mFragmentManager;
     private PreferencesHelper mPreferencesHelper;
+    private TabAdapter mTabAdapter;
+    private CurrentTaskFragment mCurrentTaskFragment;
+    private DoneTaskFragment mDoneTaskFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +96,9 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 
-        TabAdapter tabAdapter = new TabAdapter(mFragmentManager, 2);
+        mTabAdapter = new TabAdapter(mFragmentManager, 2);
 
-        viewPager.setAdapter(tabAdapter);
+        viewPager.setAdapter(mTabAdapter);
         viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -112,6 +118,10 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
             }
         });
 
+        mCurrentTaskFragment = (CurrentTaskFragment) mTabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
+
+        mDoneTaskFragment = (DoneTaskFragment) mTabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +135,8 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     }
 
     @Override
-    public void onTaskAdded() {
+    public void onTaskAdded(Task task) {
+        mCurrentTaskFragment.addTask(task);
         Toast.makeText(this, "Дело добавлено", Toast.LENGTH_LONG).show();
     }
 

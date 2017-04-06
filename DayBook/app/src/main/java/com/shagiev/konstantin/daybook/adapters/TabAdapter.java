@@ -12,19 +12,27 @@ public class TabAdapter extends FragmentStatePagerAdapter {
 
     private int mNumberOfTabs;
 
+    public static final int CURRENT_TASK_FRAGMENT_POSITION = 0;
+    public static final int DONE_TASK_FRAGMENT_POSITION = 1;
+
+    private CurrentTaskFragment mCurrentTaskFragment;
+    private DoneTaskFragment mDoneTaskFragment;
+
     public TabAdapter(FragmentManager fm, int numberOfTabs) {
         super(fm);
         mNumberOfTabs = numberOfTabs;
+        mCurrentTaskFragment = new CurrentTaskFragment();
+        mDoneTaskFragment = new DoneTaskFragment();
     }
 
     @Override
     public Fragment getItem(int position) {
 
         switch (position){
-            case 0:
-                return new CurrentTaskFragment();
-            case 1:
-                return new DoneTaskFragment();
+            case CURRENT_TASK_FRAGMENT_POSITION:
+                return mCurrentTaskFragment;
+            case DONE_TASK_FRAGMENT_POSITION:
+                return mDoneTaskFragment;
             default:
                 return null;
         }

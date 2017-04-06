@@ -21,4 +21,11 @@ public class Utils {
         String strTime = (df.format("HH:mm", time)).toString();
         return strTime;
     }
+
+    public static String getFullDate(Date date){
+        Locale locale = new Locale("ru","RU");
+        DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, locale);
+        String strDate = df.format(date);
+        return strDate + "  " + getTime(date);
+    }
 }

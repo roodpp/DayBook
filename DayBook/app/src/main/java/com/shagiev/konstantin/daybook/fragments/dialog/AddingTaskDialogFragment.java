@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,12 +15,12 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
 import com.shagiev.konstantin.daybook.R;
 import com.shagiev.konstantin.daybook.helper.Utils;
+import com.shagiev.konstantin.daybook.model.Task;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -40,6 +39,8 @@ public class AddingTaskDialogFragment extends DialogFragment {
     private TextInputLayout mTilTime;
     private EditText mEditTextTime;
     private AddingTaskListener mAddingTaskListener;
+    private Task mTask;
+    private Calendar mCalendar;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -50,6 +51,10 @@ public class AddingTaskDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View container = inflater.inflate(R.layout.dialog_task, null);
         builder.setView(container);
+
+        mTask = new Task();
+        mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.HOUR_OF_DAY, mCalendar.get(Calendar.HOUR_OF_DAY)+1);
 
         mTilTitle = (TextInputLayout) container.findViewById(R.id.tilDialogTaskTitle);
         mEditTextTitle = mTilTitle.getEditText();
@@ -68,7 +73,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
-                DialogFragment dialog = new DatePickerFragment();
+                DialogFragment dialog = DatePickerFragment.newInstance(mCalendar.getTime());
                 dialog.setTargetFragment(AddingTaskDialogFragment.this, REQUEST_DATE);
                 dialog.show(fragmentManager, DIALOG_DATE);
             }
@@ -80,9 +85,10 @@ public class AddingTaskDialogFragment extends DialogFragment {
                 DialogFragment timePickerFragment = new TimePickerFragment(){
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Calendar dateCalendar = Calendar.getInstance();
-                        dateCalendar.set(0,0,0, hourOfDay, minute);
-                        mEditTextTime.setText(Utils.getTime(dateCalendar.getTime()));
+                        mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        mCalendar.set(Calendar.MINUTE, minute);
+                        mCalendar.set(Calendar.SECOND, 0);
+                        mEditTextTime.setText(Utils.getTime(mCalendar.getTime()));
                     }
 
                     @Override
@@ -97,7 +103,11 @@ public class AddingTaskDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mAddingTaskListener.onTaskAdded();
+                mTask.setTitle(mEditTextTitle.getText().toString());
+                if(mEditTextDate.length() != 0 || mEditTextTime.length() != 0){
+                    mTask.setDate(mCalendar.getTimeInMillis());
+                }
+                mAddingTaskListener.onTaskAdded(mTask);
                 dialog.dismiss();
             }
         });
@@ -154,6 +164,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
         }
         if(requestCode == REQUEST_DATE){
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mCalendar.setTime(date);
             mEditTextDate.setText(Utils.getDate(date));
         }
     }
@@ -169,7 +180,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
     }
 
     public interface AddingTaskListener{
-            void onTaskAdded();
+            void onTaskAdded(Task task);
             void onTaskAddingCancel();
     }
 }
