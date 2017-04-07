@@ -1,6 +1,7 @@
 package com.shagiev.konstantin.daybook.fragments;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,13 +17,9 @@ import com.shagiev.konstantin.daybook.model.Task;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CurrentTaskFragment extends Fragment {
+public class CurrentTaskFragment extends TaskFragment {
 
-    private RecyclerView mRvCurrentTasks;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private CurrentTaskAdapter mAdapter;
-
-
+    private OnDoneTaskListener mOnDoneTaskListener;
     public CurrentTaskFragment() {
         // Required empty public constructor
     }
@@ -34,33 +31,32 @@ public class CurrentTaskFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View rootView = inflater.inflate(R.layout.fragment_current_task, container, false);
-        mRvCurrentTasks = (RecyclerView) rootView.findViewById(R.id.rvCurrentTasks);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rvCurrentTasks);
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mRvCurrentTasks.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new CurrentTaskAdapter();
-        mRvCurrentTasks.setAdapter(mAdapter);
+        mAdapter = new CurrentTaskAdapter(this);
+        mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
     }
 
-    public void addTask(Task newTask){
-        int position = -1;
-
-        for(int i = 0; i < mAdapter.getItemCount(); i++){
-            if(mAdapter.getItem(i).isTask()){
-                Task task = (Task) mAdapter.getItem(i);
-                if(newTask.getDate() < task.getDate()){
-                     position = i;
-                    break;
-                }
-            }
-        }
-        if(position != -1){
-            mAdapter.addItem(position, newTask);
-        } else{
-            mAdapter.addItem(newTask);
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try{
+            mOnDoneTaskListener = (OnDoneTaskListener) activity;
+        } catch (ClassCastException e){
+            throw new ClassCastException(activity.toString() + " must implement OnDoneTaskListener");
         }
     }
 
+    @Override
+    public void moveTask(Task task) {
+        mOnDoneTaskListener.onTaskDone(task);
+    }
+
+    public interface OnDoneTaskListener{
+        void onTaskDone(Task task);
+    }
 }

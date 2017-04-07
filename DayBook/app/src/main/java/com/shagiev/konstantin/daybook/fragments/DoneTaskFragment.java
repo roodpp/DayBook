@@ -1,6 +1,7 @@
 package com.shagiev.konstantin.daybook.fragments;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,14 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.shagiev.konstantin.daybook.R;
+import com.shagiev.konstantin.daybook.adapters.DoneTaskAdapter;
+import com.shagiev.konstantin.daybook.model.Task;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DoneTaskFragment extends Fragment {
+public class DoneTaskFragment extends TaskFragment {
 
-    private RecyclerView mRvDoneTasks;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private OnRestoreTaskListener mOnRestoreTaskListener;
 
     public DoneTaskFragment() {
         // Required empty public constructor
@@ -30,11 +32,31 @@ public class DoneTaskFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_done_task, container, false);
 
-        mRvDoneTasks = (RecyclerView) rootView.findViewById(R.id.rvDoneTasks);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rvDoneTasks);
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mRvDoneTasks.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new DoneTaskAdapter(this);
+        mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
     }
 
+    @Override
+    public void moveTask(Task task) {
+        mOnRestoreTaskListener.onTaskRestore(task);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try{
+            mOnRestoreTaskListener = (OnRestoreTaskListener) activity;
+        } catch (ClassCastException e){
+            throw new ClassCastException(activity.toString() + " must implement OnRestoreTaskListener");
+        }
+    }
+    public interface OnRestoreTaskListener{
+        void onTaskRestore(Task task);
+    }
 }

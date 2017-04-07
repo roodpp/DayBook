@@ -20,18 +20,20 @@ import com.shagiev.konstantin.daybook.adapters.TabAdapter;
 import com.shagiev.konstantin.daybook.fragments.CurrentTaskFragment;
 import com.shagiev.konstantin.daybook.fragments.DoneTaskFragment;
 import com.shagiev.konstantin.daybook.fragments.SplashFragment;
+import com.shagiev.konstantin.daybook.fragments.TaskFragment;
 import com.shagiev.konstantin.daybook.fragments.dialog.AddingTaskDialogFragment;
 import com.shagiev.konstantin.daybook.helper.PreferencesHelper;
 import com.shagiev.konstantin.daybook.model.Task;
 
-public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener {
+public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener,
+        CurrentTaskFragment.OnDoneTaskListener, DoneTaskFragment.OnRestoreTaskListener {
 
 
     private FragmentManager mFragmentManager;
     private PreferencesHelper mPreferencesHelper;
     private TabAdapter mTabAdapter;
-    private CurrentTaskFragment mCurrentTaskFragment;
-    private DoneTaskFragment mDoneTaskFragment;
+    private TaskFragment mCurrentTaskFragment;
+    private TaskFragment mDoneTaskFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
         int id = item.getItemId();
 
-        if(id == R.id.action_splash){
+        if (id == R.id.action_splash) {
             item.setChecked(!item.isChecked());
             mPreferencesHelper.putBoolean(PreferencesHelper.SPLASH_IS_INVISIBLE, item.isChecked());
             return true;
@@ -69,9 +71,9 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         return super.onOptionsItemSelected(item);
     }
 
-    public void runSplash(){
+    public void runSplash() {
 
-        if(!mPreferencesHelper.getBoolean(PreferencesHelper.SPLASH_IS_INVISIBLE)) {
+        if (!mPreferencesHelper.getBoolean(PreferencesHelper.SPLASH_IS_INVISIBLE)) {
             SplashFragment splashFragment = new SplashFragment();
 
             mFragmentManager.beginTransaction()
@@ -81,11 +83,11 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         }
     }
 
-    private void setUI(){
+    private void setUI() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        if(toolbar != null){
+        if (toolbar != null) {
             toolbar.setTitleTextColor(getResources().getColor(R.color.white));
             setSupportActionBar(toolbar);
         }
@@ -143,5 +145,15 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     @Override
     public void onTaskAddingCancel() {
         Toast.makeText(this, "Дело не добавлено", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onTaskDone(Task task) {
+        mDoneTaskFragment.addTask(task);
+    }
+
+    @Override
+    public void onTaskRestore(Task task) {
+        mCurrentTaskFragment.addTask(task);
     }
 }

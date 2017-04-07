@@ -14,8 +14,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.shagiev.konstantin.daybook.R;
@@ -41,6 +44,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
     private AddingTaskListener mAddingTaskListener;
     private Task mTask;
     private Calendar mCalendar;
+    private Spinner mPrioritySpinner;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -68,6 +72,21 @@ public class AddingTaskDialogFragment extends DialogFragment {
         mEditTextTitle.setHint(getResources().getString(R.string.task_title));
         mTilDate.setHint(getResources().getString(R.string.task_date));
         mTilTime.setHint(getResources().getString(R.string.task_time));
+
+        mPrioritySpinner = (Spinner) container.findViewById(R.id.spDialogTaskPriority);
+        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, Task.PRIORITY_LEVELS);
+        mPrioritySpinner.setAdapter(priorityAdapter);
+        mPrioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mTask.setPriority(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         mEditTextDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +126,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
                 if(mEditTextDate.length() != 0 || mEditTextTime.length() != 0){
                     mTask.setDate(mCalendar.getTimeInMillis());
                 }
+                mTask.setStatus(Task.STATUS_CURRENT);
                 mAddingTaskListener.onTaskAdded(mTask);
                 dialog.dismiss();
             }

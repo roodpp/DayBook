@@ -50,5 +50,12 @@
                 android:focusableInTouchMode="false"/>
 
         </android.support.design.widget.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/spDialogTaskPriority"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_below="@id/tilDialogTaskTime"/>
     </RelativeLayout>
 </ScrollView>
