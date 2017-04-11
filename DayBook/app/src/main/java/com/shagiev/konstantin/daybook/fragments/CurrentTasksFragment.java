@@ -2,6 +2,7 @@ package com.shagiev.konstantin.daybook.fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,15 +13,20 @@ import android.view.ViewGroup;
 
 import com.shagiev.konstantin.daybook.R;
 import com.shagiev.konstantin.daybook.adapters.CurrentTaskAdapter;
+import com.shagiev.konstantin.daybook.database.DBHelper;
+import com.shagiev.konstantin.daybook.database.DBManager;
 import com.shagiev.konstantin.daybook.model.Task;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CurrentTaskFragment extends TaskFragment {
+public class CurrentTasksFragment extends TasksFragment {
 
     private OnDoneTaskListener mOnDoneTaskListener;
-    public CurrentTaskFragment() {
+    public CurrentTasksFragment() {
         // Required empty public constructor
     }
 
@@ -30,7 +36,7 @@ public class CurrentTaskFragment extends TaskFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View rootView = inflater.inflate(R.layout.fragment_current_task, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_current_tasks, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rvCurrentTasks);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -48,6 +54,17 @@ public class CurrentTaskFragment extends TaskFragment {
             mOnDoneTaskListener = (OnDoneTaskListener) activity;
         } catch (ClassCastException e){
             throw new ClassCastException(activity.toString() + " must implement OnDoneTaskListener");
+        }
+    }
+
+    @Override
+    public void addTaskFromDB() {
+        List<Task> tasks = new ArrayList<>();
+        tasks.addAll(mActivity.mDBHelper.getDBManager().getTasks(DBHelper.SELECTION_STATUS + " OR "
+                + DBHelper.SELECTION_STATUS, new String[]{Integer.toString(Task.STATUS_CURRENT), Integer.toString(Task.STATUS_OVERDUE)},
+        DBHelper.TASK_DATE_COLUMN));
+        for(int i = 0; i < tasks.size(); i++){
+            addTask(tasks.get(i), false);
         }
     }
 

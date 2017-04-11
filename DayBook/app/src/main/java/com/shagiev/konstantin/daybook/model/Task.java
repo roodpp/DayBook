@@ -3,6 +3,8 @@ package com.shagiev.konstantin.daybook.model;
 
 import com.shagiev.konstantin.daybook.R;
 
+import java.util.Date;
+
 public class Task implements Item {
 
 
@@ -20,16 +22,19 @@ public class Task implements Item {
     private long mDate;
     private int mPriority;
     private int mStatus;
+    private long mTimeStamp;
 
     public Task() {
         mStatus = -1;
+        mTimeStamp = new Date().getTime();
     }
 
-    public Task(String title, long date, int priority, int status) {
+    public Task(String title, long date, int priority, int status, long timeStamp) {
         mTitle = title;
         mDate = date;
         mPriority = priority;
         mStatus = status;
+        mTimeStamp = timeStamp;
     }
 
     public Task(String title, long date) {
@@ -96,5 +101,13 @@ public class Task implements Item {
 
     public void setStatus(int status) {
         mStatus = status;
+    }
+
+    public long getTimeStamp() {
+        return mTimeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        mTimeStamp = timeStamp;
     }
 }

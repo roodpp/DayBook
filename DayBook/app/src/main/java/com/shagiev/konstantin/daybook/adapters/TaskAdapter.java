@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.shagiev.konstantin.daybook.fragments.TaskFragment;
+import com.shagiev.konstantin.daybook.fragments.TasksFragment;
 import com.shagiev.konstantin.daybook.model.Item;
 
 import java.util.ArrayList;
@@ -16,11 +16,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     protected List<Item> items = new ArrayList<>();
-    protected TaskFragment mTaskFragment;
+    protected TasksFragment mTasksFragment;
 
 
-    public TaskAdapter(TaskFragment taskFragment) {
-        mTaskFragment = taskFragment;
+    public TaskAdapter(TasksFragment tasksFragment) {
+        mTasksFragment = tasksFragment;
         this.items = new ArrayList<>();
     }
 
@@ -66,7 +66,7 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public TaskFragment getTaskFragment() {
-        return mTaskFragment;
+    public TasksFragment getTasksFragment() {
+        return mTasksFragment;
     }
 }

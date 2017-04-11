@@ -12,16 +12,20 @@ import android.view.ViewGroup;
 
 import com.shagiev.konstantin.daybook.R;
 import com.shagiev.konstantin.daybook.adapters.DoneTaskAdapter;
+import com.shagiev.konstantin.daybook.database.DBHelper;
 import com.shagiev.konstantin.daybook.model.Task;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DoneTaskFragment extends TaskFragment {
+public class DoneTasksFragment extends TasksFragment {
 
     private OnRestoreTaskListener mOnRestoreTaskListener;
 
-    public DoneTaskFragment() {
+    public DoneTasksFragment() {
         // Required empty public constructor
     }
 
@@ -30,7 +34,7 @@ public class DoneTaskFragment extends TaskFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_done_task, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_done_tasks, container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rvDoneTasks);
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -40,6 +44,17 @@ public class DoneTaskFragment extends TaskFragment {
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
+    }
+
+    @Override
+    public void addTaskFromDB() {
+        List<Task> tasks = new ArrayList<>();
+        tasks.addAll(mActivity.mDBHelper.getDBManager().getTasks(DBHelper.SELECTION_STATUS,
+                new String[]{Integer.toString(Task.STATUS_DONE)},
+                DBHelper.TASK_DATE_COLUMN));
+        for(int i = 0; i < tasks.size(); i++){
+            addTask(tasks.get(i), false);
+        }
     }
 
     @Override

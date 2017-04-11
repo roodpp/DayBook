@@ -9,11 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationSet;
 import android.widget.TextView;
 
 import com.shagiev.konstantin.daybook.R;
-import com.shagiev.konstantin.daybook.fragments.TaskFragment;
+import com.shagiev.konstantin.daybook.fragments.TasksFragment;
 import com.shagiev.konstantin.daybook.helper.Utils;
 import com.shagiev.konstantin.daybook.model.Item;
 import com.shagiev.konstantin.daybook.model.Task;
@@ -28,8 +27,8 @@ public class CurrentTaskAdapter extends TaskAdapter {
     public static final int TYPE_TASK = 0;
     public static final int TYPE_SEPARATOR = 1;
 
-    public CurrentTaskAdapter(TaskFragment taskFragment) {
-        super(taskFragment);
+    public CurrentTaskAdapter(TasksFragment tasksFragment) {
+        super(tasksFragment);
     }
 
 
@@ -78,6 +77,9 @@ public class CurrentTaskAdapter extends TaskAdapter {
                 @Override
                 public void onClick(View v) {
                     task.setStatus(Task.STATUS_DONE);
+                    getTasksFragment().mActivity.mDBHelper.getDBManager().updateStatus(task.getTimeStamp(), Task.STATUS_DONE);
+
+
                     itemView.setBackgroundColor(resources.getColor(R.color.grey_200));
 
                     taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_disabled_material_light));
@@ -108,7 +110,7 @@ public class CurrentTaskAdapter extends TaskAdapter {
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
                                         itemView.setVisibility(View.GONE);
-                                        getTaskFragment().moveTask(task);
+                                        getTasksFragment().moveTask(task);
                                         removeItem(taskViewHolder.getLayoutPosition());
                                     }
 

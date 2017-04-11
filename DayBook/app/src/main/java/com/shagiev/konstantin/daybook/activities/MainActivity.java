@@ -2,7 +2,6 @@ package com.shagiev.konstantin.daybook.activities;
 
 import android.app.DialogFragment;
 import android.app.FragmentManager;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -17,28 +16,34 @@ import android.widget.Toast;
 
 import com.shagiev.konstantin.daybook.R;
 import com.shagiev.konstantin.daybook.adapters.TabAdapter;
-import com.shagiev.konstantin.daybook.fragments.CurrentTaskFragment;
-import com.shagiev.konstantin.daybook.fragments.DoneTaskFragment;
+import com.shagiev.konstantin.daybook.database.DBHelper;
+import com.shagiev.konstantin.daybook.fragments.CurrentTasksFragment;
+import com.shagiev.konstantin.daybook.fragments.DoneTasksFragment;
 import com.shagiev.konstantin.daybook.fragments.SplashFragment;
-import com.shagiev.konstantin.daybook.fragments.TaskFragment;
+import com.shagiev.konstantin.daybook.fragments.TasksFragment;
 import com.shagiev.konstantin.daybook.fragments.dialog.AddingTaskDialogFragment;
 import com.shagiev.konstantin.daybook.helper.PreferencesHelper;
 import com.shagiev.konstantin.daybook.model.Task;
 
 public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener,
-        CurrentTaskFragment.OnDoneTaskListener, DoneTaskFragment.OnRestoreTaskListener {
+        CurrentTasksFragment.OnDoneTaskListener, DoneTasksFragment.OnRestoreTaskListener {
 
 
     private FragmentManager mFragmentManager;
     private PreferencesHelper mPreferencesHelper;
     private TabAdapter mTabAdapter;
-    private TaskFragment mCurrentTaskFragment;
-    private TaskFragment mDoneTaskFragment;
+    private TasksFragment mCurrentTasksFragment;
+    private TasksFragment mDoneTasksFragment;
+
+    public DBHelper mDBHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mDBHelper = new DBHelper(getApplicationContext());
+
         mFragmentManager = getFragmentManager();
 
         PreferencesHelper.getInstance().init(getApplicationContext());
@@ -120,9 +125,9 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
             }
         });
 
-        mCurrentTaskFragment = (CurrentTaskFragment) mTabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
+        mCurrentTasksFragment = (CurrentTasksFragment) mTabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
 
-        mDoneTaskFragment = (DoneTaskFragment) mTabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
+        mDoneTasksFragment = (DoneTasksFragment) mTabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
     @Override
     public void onTaskAdded(Task task) {
-        mCurrentTaskFragment.addTask(task);
+        mCurrentTasksFragment.addTask(task, true);
         Toast.makeText(this, "Дело добавлено", Toast.LENGTH_LONG).show();
     }
 
@@ -149,11 +154,11 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
     @Override
     public void onTaskDone(Task task) {
-        mDoneTaskFragment.addTask(task);
+        mDoneTasksFragment.addTask(task, false);
     }
 
     @Override
     public void onTaskRestore(Task task) {
-        mCurrentTaskFragment.addTask(task);
+        mCurrentTasksFragment.addTask(task, false);
     }
 }

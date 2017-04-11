@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.shagiev.konstantin.daybook.R;
-import com.shagiev.konstantin.daybook.fragments.TaskFragment;
+import com.shagiev.konstantin.daybook.fragments.TasksFragment;
 import com.shagiev.konstantin.daybook.helper.Utils;
 import com.shagiev.konstantin.daybook.model.Item;
 import com.shagiev.konstantin.daybook.model.Task;
@@ -27,8 +27,8 @@ public class DoneTaskAdapter extends TaskAdapter {
     public static final int TYPE_TASK = 0;
     public static final int TYPE_SEPARATOR = 1;
 
-    public DoneTaskAdapter(TaskFragment taskFragment) {
-        super(taskFragment);
+    public DoneTaskAdapter(TasksFragment tasksFragment) {
+        super(tasksFragment);
     }
 
 
@@ -77,6 +77,8 @@ public class DoneTaskAdapter extends TaskAdapter {
                 @Override
                 public void onClick(View v) {
                     task.setStatus(Task.STATUS_CURRENT);
+                    getTasksFragment().mActivity.mDBHelper.getDBManager().updateStatus(task.getTimeStamp(), Task.STATUS_CURRENT);
+
                     itemView.setBackgroundColor(resources.getColor(R.color.grey_50));
 
                     taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_default_material_light));
@@ -107,7 +109,7 @@ public class DoneTaskAdapter extends TaskAdapter {
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
                                         itemView.setVisibility(View.GONE);
-                                        getTaskFragment().moveTask(task);
+                                        getTasksFragment().moveTask(task);
                                         removeItem(taskViewHolder.getLayoutPosition());
                                     }
 

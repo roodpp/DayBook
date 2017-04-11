@@ -5,8 +5,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
-import com.shagiev.konstantin.daybook.fragments.CurrentTaskFragment;
-import com.shagiev.konstantin.daybook.fragments.DoneTaskFragment;
+import com.shagiev.konstantin.daybook.fragments.CurrentTasksFragment;
+import com.shagiev.konstantin.daybook.fragments.DoneTasksFragment;
 
 public class TabAdapter extends FragmentStatePagerAdapter {
 
@@ -15,14 +15,14 @@ public class TabAdapter extends FragmentStatePagerAdapter {
     public static final int CURRENT_TASK_FRAGMENT_POSITION = 0;
     public static final int DONE_TASK_FRAGMENT_POSITION = 1;
 
-    private CurrentTaskFragment mCurrentTaskFragment;
-    private DoneTaskFragment mDoneTaskFragment;
+    private CurrentTasksFragment mCurrentTaskFragment;
+    private DoneTasksFragment mDoneTaskFragment;
 
     public TabAdapter(FragmentManager fm, int numberOfTabs) {
         super(fm);
         mNumberOfTabs = numberOfTabs;
-        mCurrentTaskFragment = new CurrentTaskFragment();
-        mDoneTaskFragment = new DoneTaskFragment();
+        mCurrentTaskFragment = new CurrentTasksFragment();
+        mDoneTaskFragment = new DoneTasksFragment();
     }
 
     @Override
