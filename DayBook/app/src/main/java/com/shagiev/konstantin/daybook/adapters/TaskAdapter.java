@@ -61,7 +61,7 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
             super(itemView);
             this.title = title;
             this.date = date;
-            this.mCircleImageViewPriority =priority;
+            this.mCircleImageViewPriority = priority;
 
         }
     }

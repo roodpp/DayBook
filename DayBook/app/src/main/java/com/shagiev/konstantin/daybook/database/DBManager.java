@@ -35,6 +35,16 @@ public class DBManager {
         return tasks;
     }
 
+    public Task getTask(long timestamp){
+        Task task = null;
+        TaskCursorWrapper cursor = queryTasks(DBHelper.SELECTION_TIMESTAMP, new String[]{Long.toString(timestamp)}, null);
+        if(cursor.moveToFirst()){
+            task =  cursor.getTask();
+        }
+        cursor.close();
+        return task;
+    }
+
 
     public void updateTitle(long timestamp, String title){
         update(DBHelper.TASK_TITLE_COLUMN, timestamp, title);

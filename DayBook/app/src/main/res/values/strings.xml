@@ -13,6 +13,9 @@
     <string name="dialog_cancel">Отмена</string>
     <string name="dialog_error_empty_title">Введите заголовок</string>
     
+    <string name="dialog_removing_message">Хотите удалить дело?</string>
+    <string name="removed">Удалено</string>
+    
     <string name="task_title">Заголовок</string>
     <string name="task_date">Дата</string>
     <string name="task_time">Время</string>
