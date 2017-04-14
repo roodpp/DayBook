@@ -60,6 +60,8 @@ public abstract class TasksFragment extends Fragment{
 
     public abstract void moveTask(Task task);
 
+    public abstract void findTasks(String title);
+
     public void removeTaskDialog(final int location){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
 

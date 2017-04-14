@@ -59,6 +59,7 @@ public class CurrentTasksFragment extends TasksFragment {
 
     @Override
     public void addTaskFromDB() {
+        mAdapter.removeAllItems();
         List<Task> tasks = new ArrayList<>();
         tasks.addAll(mActivity.mDBHelper.getDBManager().getTasks(DBHelper.SELECTION_STATUS + " OR "
                 + DBHelper.SELECTION_STATUS, new String[]{Integer.toString(Task.STATUS_CURRENT), Integer.toString(Task.STATUS_OVERDUE)},
@@ -71,6 +72,18 @@ public class CurrentTasksFragment extends TasksFragment {
     @Override
     public void moveTask(Task task) {
         mOnDoneTaskListener.onTaskDone(task);
+    }
+
+    @Override
+    public void findTasks(String title) {
+        mAdapter.removeAllItems();
+        List<Task> tasks = new ArrayList<>();
+        tasks.addAll(mActivity.mDBHelper.getDBManager().getTasks(DBHelper.SELECTION_LIKE_TITLE + " AND " + DBHelper.SELECTION_STATUS + " OR "
+                        + DBHelper.SELECTION_STATUS, new String[]{"%" + title + "%",Integer.toString(Task.STATUS_CURRENT), Integer.toString(Task.STATUS_OVERDUE)},
+                DBHelper.TASK_DATE_COLUMN));
+        for(int i = 0; i < tasks.size(); i++){
+            addTask(tasks.get(i), false);
+        }
     }
 
     public interface OnDoneTaskListener{

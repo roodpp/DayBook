@@ -48,6 +48,7 @@ public class DoneTasksFragment extends TasksFragment {
 
     @Override
     public void addTaskFromDB() {
+        mAdapter.removeAllItems();
         List<Task> tasks = new ArrayList<>();
         tasks.addAll(mActivity.mDBHelper.getDBManager().getTasks(DBHelper.SELECTION_STATUS,
                 new String[]{Integer.toString(Task.STATUS_DONE)},
@@ -60,6 +61,18 @@ public class DoneTasksFragment extends TasksFragment {
     @Override
     public void moveTask(Task task) {
         mOnRestoreTaskListener.onTaskRestore(task);
+    }
+
+    @Override
+    public void findTasks(String title) {
+        mAdapter.removeAllItems();
+        List<Task> tasks = new ArrayList<>();
+        tasks.addAll(mActivity.mDBHelper.getDBManager().getTasks(DBHelper.SELECTION_LIKE_TITLE + " AND " + DBHelper.SELECTION_STATUS
+                , new String[]{"%" + title + "%",Integer.toString(Task.STATUS_DONE)},
+                DBHelper.TASK_DATE_COLUMN));
+        for(int i = 0; i < tasks.size(); i++){
+            addTask(tasks.get(i), false);
+        }
     }
 
     @Override

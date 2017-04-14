@@ -66,8 +66,8 @@ public class DoneTaskAdapter extends TaskAdapter {
                 taskViewHolder.date.setText(null);
             }
             itemView.setVisibility(View.VISIBLE);
+            taskViewHolder.mCircleImageViewPriority.setEnabled(true);
 
-            itemView.setBackgroundColor(resources.getColor(R.color.grey_200));
 
             taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_disabled_material_light));
             taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_disabled_material_light));
@@ -93,9 +93,9 @@ public class DoneTaskAdapter extends TaskAdapter {
                 @Override
                 public void onClick(View v) {
                     task.setStatus(Task.STATUS_CURRENT);
+                    taskViewHolder.mCircleImageViewPriority.setEnabled(false);
                     getTasksFragment().mActivity.mDBHelper.getDBManager().updateStatus(task.getTimeStamp(), Task.STATUS_CURRENT);
 
-                    itemView.setBackgroundColor(resources.getColor(R.color.grey_50));
 
                     taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_default_material_light));
                     taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_default_material_light));

@@ -14,6 +14,6 @@
     <color name="priority_low">#4DD0E1</color>
     <color name="priority_low_done">#B2EBF2</color>
 
-    <color name="grey_50">#FAFAFA</color>
-    <color name="grey_200">#EEEEEE</color>
+    <color name="gray_50">#FAFAFA</color>
+    <color name="gray_200">#EEEEEE</color>
 </resources>

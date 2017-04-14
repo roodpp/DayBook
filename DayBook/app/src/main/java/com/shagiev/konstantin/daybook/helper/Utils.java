@@ -26,6 +26,6 @@ public class Utils {
         Locale locale = new Locale("ru","RU");
         DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, locale);
         String strDate = df.format(date);
-        return strDate + "  " + getTime(date);
+        return strDate + " " + getTime(date);
     }
 }
