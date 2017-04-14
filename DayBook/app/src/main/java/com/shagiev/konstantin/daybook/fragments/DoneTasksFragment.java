@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.shagiev.konstantin.daybook.R;
 import com.shagiev.konstantin.daybook.adapters.DoneTaskAdapter;
+import com.shagiev.konstantin.daybook.alarm.AlarmHelper;
 import com.shagiev.konstantin.daybook.database.DBHelper;
 import com.shagiev.konstantin.daybook.model.Task;
 
@@ -60,6 +61,9 @@ public class DoneTasksFragment extends TasksFragment {
 
     @Override
     public void moveTask(Task task) {
+        if(task.getDate() != 0) {
+            AlarmHelper.getInstance().setAlarm(task);
+        }
         mOnRestoreTaskListener.onTaskRestore(task);
     }
 

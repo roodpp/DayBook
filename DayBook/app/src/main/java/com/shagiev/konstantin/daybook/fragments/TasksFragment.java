@@ -13,6 +13,7 @@ import com.shagiev.konstantin.daybook.R;
 import com.shagiev.konstantin.daybook.activities.MainActivity;
 import com.shagiev.konstantin.daybook.adapters.CurrentTaskAdapter;
 import com.shagiev.konstantin.daybook.adapters.TaskAdapter;
+import com.shagiev.konstantin.daybook.alarm.AlarmHelper;
 import com.shagiev.konstantin.daybook.model.Item;
 import com.shagiev.konstantin.daybook.model.Task;
 
@@ -99,6 +100,7 @@ public abstract class TasksFragment extends Fragment{
                         public void onViewDetachedFromWindow(View v) {
                             if(isRemoved[0]){
                                 mActivity.mDBHelper.removeTask(timestamp);
+                                AlarmHelper.getInstance().removeAlarm(timestamp);
                             }
                         }
                     });

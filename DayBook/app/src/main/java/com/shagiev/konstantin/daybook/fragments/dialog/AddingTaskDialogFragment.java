@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.shagiev.konstantin.daybook.R;
+import com.shagiev.konstantin.daybook.alarm.AlarmHelper;
 import com.shagiev.konstantin.daybook.helper.Utils;
 import com.shagiev.konstantin.daybook.model.Task;
 
@@ -123,10 +124,11 @@ public class AddingTaskDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mTask.setTitle(mEditTextTitle.getText().toString());
+                mTask.setStatus(Task.STATUS_CURRENT);
                 if(mEditTextDate.length() != 0 || mEditTextTime.length() != 0){
                     mTask.setDate(mCalendar.getTimeInMillis());
+                    AlarmHelper.getInstance().setAlarm(mTask);
                 }
-                mTask.setStatus(Task.STATUS_CURRENT);
                 mAddingTaskListener.onTaskAdded(mTask);
                 dialog.dismiss();
             }

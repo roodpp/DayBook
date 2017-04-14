@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.shagiev.konstantin.daybook.R;
 import com.shagiev.konstantin.daybook.adapters.CurrentTaskAdapter;
+import com.shagiev.konstantin.daybook.alarm.AlarmHelper;
 import com.shagiev.konstantin.daybook.database.DBHelper;
 import com.shagiev.konstantin.daybook.database.DBManager;
 import com.shagiev.konstantin.daybook.model.Task;
@@ -71,6 +72,7 @@ public class CurrentTasksFragment extends TasksFragment {
 
     @Override
     public void moveTask(Task task) {
+        AlarmHelper.getInstance().removeAlarm(task.getDate());
         mOnDoneTaskListener.onTaskDone(task);
     }
 

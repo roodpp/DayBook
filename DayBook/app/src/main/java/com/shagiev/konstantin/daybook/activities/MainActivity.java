@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.shagiev.konstantin.daybook.R;
 import com.shagiev.konstantin.daybook.adapters.TabAdapter;
+import com.shagiev.konstantin.daybook.alarm.AlarmHelper;
+import com.shagiev.konstantin.daybook.alarm.MyApplication;
 import com.shagiev.konstantin.daybook.database.DBHelper;
 import com.shagiev.konstantin.daybook.fragments.CurrentTasksFragment;
 import com.shagiev.konstantin.daybook.fragments.DoneTasksFragment;
@@ -51,9 +53,23 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         PreferencesHelper.getInstance().init(getApplicationContext());
         mPreferencesHelper = PreferencesHelper.getInstance();
 
+        AlarmHelper.getInstance().init(getApplicationContext());
+
         runSplash();
 
         setUI();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyApplication.activityPaused();
     }
 
     @Override
