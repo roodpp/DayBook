@@ -16,9 +16,11 @@ import com.shagiev.konstantin.daybook.adapters.CurrentTaskAdapter;
 import com.shagiev.konstantin.daybook.alarm.AlarmHelper;
 import com.shagiev.konstantin.daybook.database.DBHelper;
 import com.shagiev.konstantin.daybook.database.DBManager;
+import com.shagiev.konstantin.daybook.model.Separator;
 import com.shagiev.konstantin.daybook.model.Task;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -69,6 +71,78 @@ public class CurrentTasksFragment extends TasksFragment {
             addTask(tasks.get(i), false);
         }
     }
+    @Override
+    public void addTask(Task newTask, boolean saveToDB){
+        int position = -1;
+
+        for(int i = 0; i < mAdapter.getItemCount(); i++){
+            if(mAdapter.getItem(i).isTask()){
+                Task task = (Task) mAdapter.getItem(i);
+                if(newTask.getDate() < task.getDate()){
+                    position = i;
+                    break;
+                }
+            }
+        }
+        Separator separator = null;
+
+        if(newTask.getDate() != 0){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(newTask.getDate());
+
+            if(calendar.get(Calendar.DAY_OF_YEAR) < Calendar.getInstance().get(Calendar.DAY_OF_YEAR)){
+                newTask.setDateStatus(Separator.TYPE_OVERDUE);
+                if(!mAdapter.containsSeparatorOverdue){
+                    mAdapter.containsSeparatorOverdue = true;
+                    separator = new Separator(Separator.TYPE_OVERDUE);
+                }
+            } else if(calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)){
+                newTask.setDateStatus(Separator.TYPE_TODAY);
+                if(!mAdapter.containsSeparatorToday){
+                    mAdapter.containsSeparatorToday = true;
+                    separator = new Separator(Separator.TYPE_TODAY);
+                }
+            } else if(calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1){
+                newTask.setDateStatus(Separator.TYPE_TOMORROW);
+                if(!mAdapter.containsSeparatorTomorrow){
+                    mAdapter.containsSeparatorTomorrow = true;
+                    separator = new Separator(Separator.TYPE_TOMORROW);
+                }
+            } else if(calendar.get(Calendar.DAY_OF_YEAR) > Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + 1){
+                newTask.setDateStatus(Separator.TYPE_FUTURE);
+                if(!mAdapter.containsSeparatorFuture){
+                    mAdapter.containsSeparatorFuture = true;
+                    separator = new Separator(Separator.TYPE_FUTURE);
+                }
+            }
+        }
+
+        if(position != -1){
+            if(!mAdapter.getItem(position-1).isTask()){
+                if(position-2 >= 0 && mAdapter.getItem(position-2).isTask()){
+                    Task task = (Task) mAdapter.getItem(position-2);
+                    if(task.getDateStatus() == newTask.getDateStatus()){
+                        position = position - 1;
+                    }
+                }else if(position-2 < 0 && newTask.getDate() == 0){
+                    position = position -1;
+                }
+            }
+            if(separator != null){
+                mAdapter.addItem(position-1, separator);
+            }
+            mAdapter.addItem(position, newTask);
+        } else{
+            if(separator != null){
+                mAdapter.addItem(separator);
+            }
+            mAdapter.addItem(newTask);
+        }
+        if(saveToDB){
+            mActivity.mDBHelper.saveTask(newTask);
+        }
+    }
+
 
     @Override
     public void moveTask(Task task) {

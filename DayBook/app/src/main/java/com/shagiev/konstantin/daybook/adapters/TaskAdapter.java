@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import com.shagiev.konstantin.daybook.fragments.TasksFragment;
 import com.shagiev.konstantin.daybook.model.Item;
+import com.shagiev.konstantin.daybook.model.Separator;
+import com.shagiev.konstantin.daybook.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,11 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     protected List<Item> items = new ArrayList<>();
     protected TasksFragment mTasksFragment;
+
+    public boolean containsSeparatorOverdue;
+    public boolean containsSeparatorToday;
+    public boolean containsSeparatorTomorrow;
+    public boolean containsSeparatorFuture;
 
 
     public TaskAdapter(TasksFragment tasksFragment) {
@@ -43,18 +50,66 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
         notifyItemChanged(position);
     }
 
+    public void updateTask(Task newTask){
+        for(int i = 0; i < getItemCount(); i++){
+            if(getItem(i).isTask()){
+                Task task = (Task) getItem(i);
+                if(task.getTimeStamp() == newTask.getTimeStamp()){
+                    removeItem(i);
+                    getTasksFragment().addTask(newTask, false);
+                }
+            }
+        }
+    }
+
     public void removeItem(int position) {
-        if (position >= 0 && position < getItemCount()) {
+        if (position >= 0 && position < getItemCount() - 1) {
             items.remove(position);
             notifyItemRemoved(position);
+            if(position - 1 >= 0 && position<= getItemCount() -1){
+                if(!getItem(position).isTask() && !getItem(position-1).isTask()){
+                    Separator separator = (Separator) getItem(position-1);
+                    checkSeparators(separator);
+                    items.remove(position-1);
+                    notifyItemRemoved(position-1);
+                }
+            } else if(getItemCount() - 1 >=0 && !getItem(getItemCount()-1).isTask()){
+                Separator separator = (Separator) getItem(getItemCount()-1);
+                checkSeparators(separator);
+
+                int tempPosition = getItemCount() - 1;
+                items.remove(tempPosition);
+                notifyItemRemoved(tempPosition);
+            }
         }
 
+    }
+
+    public void checkSeparators(Separator separator) {
+        switch (separator.getType()){
+         case Separator.TYPE_OVERDUE:
+                containsSeparatorOverdue = false;
+                break;
+         case Separator.TYPE_TODAY:
+                containsSeparatorOverdue = false;
+                break;
+         case Separator.TYPE_TOMORROW:
+                containsSeparatorOverdue = false;
+                break;
+         case Separator.TYPE_FUTURE:
+                containsSeparatorOverdue = false;
+                break;
+        }
     }
 
     public void removeAllItems(){
         if(getItemCount() != 0){
             items.clear();
             notifyDataSetChanged();
+            containsSeparatorOverdue = false;
+            containsSeparatorToday = false;
+            containsSeparatorTomorrow = false;
+            containsSeparatorFuture = false;
         }
     }
 
@@ -72,6 +127,17 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         }
     }
+
+    protected class SeparatorViewHolder extends RecyclerView.ViewHolder{
+
+        protected TextView type;
+
+        public SeparatorViewHolder(View itemView, TextView type) {
+            super(itemView);
+            this.type = type;
+        }
+    }
+
 
     public TasksFragment getTasksFragment() {
         return mTasksFragment;

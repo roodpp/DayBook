@@ -2,6 +2,7 @@ package com.shagiev.konstantin.daybook.fragments;
 
 
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import com.shagiev.konstantin.daybook.activities.MainActivity;
 import com.shagiev.konstantin.daybook.adapters.CurrentTaskAdapter;
 import com.shagiev.konstantin.daybook.adapters.TaskAdapter;
 import com.shagiev.konstantin.daybook.alarm.AlarmHelper;
+import com.shagiev.konstantin.daybook.fragments.dialog.EditTaskDialogFragment;
 import com.shagiev.konstantin.daybook.model.Item;
 import com.shagiev.konstantin.daybook.model.Task;
 
@@ -25,27 +27,7 @@ public abstract class TasksFragment extends Fragment{
     public MainActivity mActivity;
 
 
-    public void addTask(Task newTask, boolean saveToDB){
-        int position = -1;
-
-        for(int i = 0; i < mAdapter.getItemCount(); i++){
-            if(mAdapter.getItem(i).isTask()){
-                Task task = (Task) mAdapter.getItem(i);
-                if(newTask.getDate() < task.getDate()){
-                    position = i;
-                    break;
-                }
-            }
-        }
-        if(position != -1){
-            mAdapter.addItem(position, newTask);
-        } else{
-            mAdapter.addItem(newTask);
-        }
-        if(saveToDB){
-            mActivity.mDBHelper.saveTask(newTask);
-        }
-    }
+    public abstract void addTask(Task newTask, boolean saveToDB);
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -62,6 +44,10 @@ public abstract class TasksFragment extends Fragment{
     public abstract void moveTask(Task task);
 
     public abstract void findTasks(String title);
+
+    public void updateTask(Task task){
+            mAdapter.updateTask(task);
+    }
 
     public void removeTaskDialog(final int location){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
@@ -122,6 +108,11 @@ public abstract class TasksFragment extends Fragment{
             dialogBuilder.show();
 
         }
+    }
+
+    public void showEditTaskDialog(Task task){
+        DialogFragment editingTaskDialog = EditTaskDialogFragment.newInstance(task);
+        editingTaskDialog.show(getActivity().getFragmentManager(), "EditTaskDialogFragment");
     }
 
 }

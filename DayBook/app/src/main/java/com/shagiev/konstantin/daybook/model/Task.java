@@ -23,6 +23,7 @@ public class Task implements Item {
     private int mPriority;
     private int mStatus;
     private long mTimeStamp;
+    private int dateStatus;
 
     public Task() {
         mStatus = -1;
@@ -109,5 +110,13 @@ public class Task implements Item {
 
     public void setTimeStamp(long timeStamp) {
         mTimeStamp = timeStamp;
+    }
+
+    public int getDateStatus() {
+        return dateStatus;
+    }
+
+    public void setDateStatus(int dateStatus) {
+        this.dateStatus = dateStatus;
     }
 }

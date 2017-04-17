@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">DayBook</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="do_not_show_splash">Не отображать заствку</string>
     
     <string name="current_task">Текущие дела</string>
     <string name="done_task">Завершенные дела</string>
-
+    
+    <string name="dialog_edit_title">Редактирование</string>
+    
     <string name="dialog_title">Добавление дела</string>
     <string name="dialog_ok">ОК</string>
     <string name="dialog_cancel">Отмена</string>
@@ -19,5 +19,10 @@
     <string name="task_title">Заголовок</string>
     <string name="task_date">Дата</string>
     <string name="task_time">Время</string>
+
+    <string name="separator_overdue">Просрочено</string>
+    <string name="separator_today">Сегодня</string>
+    <string name="separator_tomorrow">Завтра</string>
+    <string name="separator_future">Потом</string>
 
 </resources>

@@ -25,11 +25,12 @@ import com.shagiev.konstantin.daybook.fragments.DoneTasksFragment;
 import com.shagiev.konstantin.daybook.fragments.SplashFragment;
 import com.shagiev.konstantin.daybook.fragments.TasksFragment;
 import com.shagiev.konstantin.daybook.fragments.dialog.AddingTaskDialogFragment;
+import com.shagiev.konstantin.daybook.fragments.dialog.EditTaskDialogFragment;
 import com.shagiev.konstantin.daybook.helper.PreferencesHelper;
 import com.shagiev.konstantin.daybook.model.Task;
 
 public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener,
-        CurrentTasksFragment.OnDoneTaskListener, DoneTasksFragment.OnRestoreTaskListener {
+        CurrentTasksFragment.OnDoneTaskListener, DoneTasksFragment.OnRestoreTaskListener, EditTaskDialogFragment.EditingTaskListener {
 
 
     private FragmentManager mFragmentManager;
@@ -193,5 +194,11 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     @Override
     public void onTaskRestore(Task task) {
         mCurrentTasksFragment.addTask(task, false);
+    }
+
+    @Override
+    public void onTaskEdited(Task task) {
+        mCurrentTasksFragment.updateTask(task);
+        mDBHelper.getDBManager().updateTask(task);
     }
 }

@@ -58,6 +58,28 @@ public class DoneTasksFragment extends TasksFragment {
             addTask(tasks.get(i), false);
         }
     }
+    @Override
+    public void addTask(Task newTask, boolean saveToDB){
+        int position = -1;
+
+        for(int i = 0; i < mAdapter.getItemCount(); i++){
+            if(mAdapter.getItem(i).isTask()){
+                Task task = (Task) mAdapter.getItem(i);
+                if(newTask.getDate() < task.getDate()){
+                    position = i;
+                    break;
+                }
+            }
+        }
+        if(position != -1){
+            mAdapter.addItem(position, newTask);
+        } else{
+            mAdapter.addItem(newTask);
+        }
+        if(saveToDB){
+            mActivity.mDBHelper.saveTask(newTask);
+        }
+    }
 
     @Override
     public void moveTask(Task task) {
@@ -91,4 +113,5 @@ public class DoneTasksFragment extends TasksFragment {
     public interface OnRestoreTaskListener{
         void onTaskRestore(Task task);
     }
+
 }
