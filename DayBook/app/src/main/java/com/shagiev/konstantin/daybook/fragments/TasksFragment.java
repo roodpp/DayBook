@@ -45,6 +45,8 @@ public abstract class TasksFragment extends Fragment{
 
     public abstract void findTasks(String title);
 
+    public abstract void checkAdapter();
+
     public void updateTask(Task task){
             mAdapter.updateTask(task);
     }

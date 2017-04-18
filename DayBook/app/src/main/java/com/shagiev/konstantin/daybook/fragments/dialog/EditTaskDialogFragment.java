@@ -43,7 +43,6 @@ public class EditTaskDialogFragment extends DialogFragment {
     private EditText mEditTextDate;
     private TextInputLayout mTilTime;
     private EditText mEditTextTime;
-    private Task mTask;
     private Calendar mCalendar;
     private Spinner mPrioritySpinner;
     private EditingTaskListener mEditingTaskListener;
@@ -62,10 +61,6 @@ public class EditTaskDialogFragment extends DialogFragment {
 
         editTaskDialogFragment.setArguments(args);
         return editTaskDialogFragment;
-    }
-
-    public interface EditingTaskListener{
-        void onTaskEdited(Task task);
     }
 
     @Override
@@ -98,7 +93,6 @@ public class EditTaskDialogFragment extends DialogFragment {
         View container = inflater.inflate(R.layout.dialog_task, null);
         builder.setView(container);
 
-        mTask = new Task();
         mCalendar = Calendar.getInstance();
         mCalendar.set(Calendar.HOUR_OF_DAY, mCalendar.get(Calendar.HOUR_OF_DAY)+1);
 
@@ -129,7 +123,7 @@ public class EditTaskDialogFragment extends DialogFragment {
         mPrioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mTask.setPriority(position);
+                task.setPriority(position);
             }
 
             @Override
@@ -175,11 +169,11 @@ public class EditTaskDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mTask.setTitle(mEditTextTitle.getText().toString());
-                mTask.setStatus(Task.STATUS_CURRENT);
+                task.setTitle(mEditTextTitle.getText().toString());
+                task.setStatus(Task.STATUS_CURRENT);
                 if(mEditTextDate.length() != 0 || mEditTextTime.length() != 0){
-                    mTask.setDate(mCalendar.getTimeInMillis());
-                    AlarmHelper.getInstance().setAlarm(mTask);
+                    task.setDate(mCalendar.getTimeInMillis());
+                    AlarmHelper.getInstance().setAlarm(task);
                 }
                 mEditingTaskListener.onTaskEdited(task);
                 dialog.dismiss();
@@ -227,5 +221,10 @@ public class EditTaskDialogFragment extends DialogFragment {
             }
         });
         return alertDialog;
+    }
+
+
+    public interface EditingTaskListener{
+        void onTaskEdited(Task task);
     }
 }

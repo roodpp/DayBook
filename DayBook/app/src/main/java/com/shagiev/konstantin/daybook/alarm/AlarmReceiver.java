@@ -39,8 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         notificationBuilder.setContentTitle(context.getResources().getString(R.string.app_name));
         notificationBuilder.setContentText(title);
-        notificationBuilder.setColor(context.getResources().getColor(color));
-        notificationBuilder.setSmallIcon(R.drawable.ic_checkbox_blank_circle_white_48dp);
+        notificationBuilder.setSmallIcon(R.drawable.ic_checkbox_marked_circle_grey600_48dp);
 
 
         notificationBuilder.setDefaults(Notification.DEFAULT_ALL);

@@ -49,6 +49,7 @@ public class DoneTasksFragment extends TasksFragment {
 
     @Override
     public void addTaskFromDB() {
+        checkAdapter();
         mAdapter.removeAllItems();
         List<Task> tasks = new ArrayList<>();
         tasks.addAll(mActivity.mDBHelper.getDBManager().getTasks(DBHelper.SELECTION_STATUS,
@@ -61,6 +62,7 @@ public class DoneTasksFragment extends TasksFragment {
     @Override
     public void addTask(Task newTask, boolean saveToDB){
         int position = -1;
+        checkAdapter();
 
         for(int i = 0; i < mAdapter.getItemCount(); i++){
             if(mAdapter.getItem(i).isTask()){
@@ -91,6 +93,7 @@ public class DoneTasksFragment extends TasksFragment {
 
     @Override
     public void findTasks(String title) {
+        checkAdapter();
         mAdapter.removeAllItems();
         List<Task> tasks = new ArrayList<>();
         tasks.addAll(mActivity.mDBHelper.getDBManager().getTasks(DBHelper.SELECTION_LIKE_TITLE + " AND " + DBHelper.SELECTION_STATUS
@@ -98,6 +101,14 @@ public class DoneTasksFragment extends TasksFragment {
                 DBHelper.TASK_DATE_COLUMN));
         for(int i = 0; i < tasks.size(); i++){
             addTask(tasks.get(i), false);
+        }
+    }
+
+    @Override
+    public void checkAdapter() {
+        if(mAdapter == null){
+            mAdapter = new DoneTaskAdapter(this);
+            addTaskFromDB();
         }
     }
 

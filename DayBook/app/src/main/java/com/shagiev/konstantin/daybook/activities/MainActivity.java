@@ -41,11 +41,13 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     private SearchView mSearchView;
 
     public DBHelper mDBHelper;
+    public static String[] PRIORITY_LEVELS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        PRIORITY_LEVELS = getResources().getStringArray(R.array.priority_levels);
 
         mDBHelper = new DBHelper(getApplicationContext());
 
@@ -59,6 +61,11 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         runSplash();
 
         setUI();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
     }
 
     @Override

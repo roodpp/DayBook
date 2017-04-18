@@ -62,6 +62,7 @@ public class CurrentTasksFragment extends TasksFragment {
 
     @Override
     public void addTaskFromDB() {
+        checkAdapter();
         mAdapter.removeAllItems();
         List<Task> tasks = new ArrayList<>();
         tasks.addAll(mActivity.mDBHelper.getDBManager().getTasks(DBHelper.SELECTION_STATUS + " OR "
@@ -74,6 +75,7 @@ public class CurrentTasksFragment extends TasksFragment {
     @Override
     public void addTask(Task newTask, boolean saveToDB){
         int position = -1;
+        checkAdapter();
 
         for(int i = 0; i < mAdapter.getItemCount(); i++){
             if(mAdapter.getItem(i).isTask()){
@@ -84,6 +86,35 @@ public class CurrentTasksFragment extends TasksFragment {
                 }
             }
         }
+        Separator separator = makeSeparator(newTask);
+
+        if(position != -1){
+            if(!mAdapter.getItem(position-1).isTask()){
+                if(position-2 >= 0 && mAdapter.getItem(position-2).isTask()){
+                    Task task = (Task) mAdapter.getItem(position-2);
+                    if(task.getDateStatus() == newTask.getDateStatus()){
+                        position = position - 1;
+                    }
+                }else if(position-2 < 0 && newTask.getDate() == 0){
+                    position = position -1;
+                }
+            }
+            if(separator != null){
+                mAdapter.addItem(position-1, separator);
+            }
+            mAdapter.addItem(position, newTask);
+        } else{
+            if(separator != null){
+                mAdapter.addItem(separator);
+            }
+            mAdapter.addItem(newTask);
+        }
+        if(saveToDB){
+            mActivity.mDBHelper.saveTask(newTask);
+        }
+    }
+
+    public Separator makeSeparator(Task newTask){
         Separator separator = null;
 
         if(newTask.getDate() != 0){
@@ -116,33 +147,8 @@ public class CurrentTasksFragment extends TasksFragment {
                 }
             }
         }
-
-        if(position != -1){
-            if(!mAdapter.getItem(position-1).isTask()){
-                if(position-2 >= 0 && mAdapter.getItem(position-2).isTask()){
-                    Task task = (Task) mAdapter.getItem(position-2);
-                    if(task.getDateStatus() == newTask.getDateStatus()){
-                        position = position - 1;
-                    }
-                }else if(position-2 < 0 && newTask.getDate() == 0){
-                    position = position -1;
-                }
-            }
-            if(separator != null){
-                mAdapter.addItem(position-1, separator);
-            }
-            mAdapter.addItem(position, newTask);
-        } else{
-            if(separator != null){
-                mAdapter.addItem(separator);
-            }
-            mAdapter.addItem(newTask);
-        }
-        if(saveToDB){
-            mActivity.mDBHelper.saveTask(newTask);
-        }
+        return separator;
     }
-
 
     @Override
     public void moveTask(Task task) {
@@ -152,6 +158,7 @@ public class CurrentTasksFragment extends TasksFragment {
 
     @Override
     public void findTasks(String title) {
+        checkAdapter();
         mAdapter.removeAllItems();
         List<Task> tasks = new ArrayList<>();
         tasks.addAll(mActivity.mDBHelper.getDBManager().getTasks(DBHelper.SELECTION_LIKE_TITLE + " AND " + DBHelper.SELECTION_STATUS + " OR "
@@ -159,6 +166,13 @@ public class CurrentTasksFragment extends TasksFragment {
                 DBHelper.TASK_DATE_COLUMN));
         for(int i = 0; i < tasks.size(); i++){
             addTask(tasks.get(i), false);
+        }
+    }
+
+    @Override
+    public void checkAdapter() {
+        if(mAdapter == null){
+            mAdapter = new CurrentTaskAdapter(this);
         }
     }
 

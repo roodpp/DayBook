@@ -2,6 +2,7 @@ package com.shagiev.konstantin.daybook.model;
 
 
 import com.shagiev.konstantin.daybook.R;
+import com.shagiev.konstantin.daybook.activities.MainActivity;
 
 import java.util.Date;
 
@@ -12,7 +13,7 @@ public class Task implements Item {
     public static final int PRIORITY_NORMAL = 1;
     public static final int PRIORITY_HIGH = 2;
 
-    public static final String [] PRIORITY_LEVELS = {"Low Priority", "Normal Priority", "High Priority"};
+    public static final String [] PRIORITY_LEVELS = MainActivity.PRIORITY_LEVELS;
 
     public static final int STATUS_OVERDUE = 0;
     public static final int STATUS_CURRENT = 1;

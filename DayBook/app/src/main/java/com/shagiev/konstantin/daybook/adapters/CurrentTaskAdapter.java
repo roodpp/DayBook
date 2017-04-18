@@ -77,9 +77,9 @@ public class CurrentTaskAdapter extends TaskAdapter {
             taskViewHolder.mCircleImageViewPriority.setEnabled(true);
 
             if (task.getDate() != 0 && task.getDate() < Calendar.getInstance().getTimeInMillis()) {
-                itemView.setBackgroundColor(R.color.gray_200);
+                itemView.setBackgroundColor(resources.getColor(R.color.gray_200));
             } else {
-                itemView.setBackgroundColor(R.color.gray_50);
+                itemView.setBackgroundColor(resources.getColor(R.color.gray_50));
             }
 
             taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_default_material_light));
@@ -90,7 +90,7 @@ public class CurrentTaskAdapter extends TaskAdapter {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getTasksFragment().updateTask(task);
+                    getTasksFragment().showEditTaskDialog(task);
                 }
             });
 

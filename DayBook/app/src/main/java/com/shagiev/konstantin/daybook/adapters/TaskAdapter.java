@@ -47,7 +47,7 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public void addItem(int position, Item item) {
         items.add(position, item);
-        notifyItemChanged(position);
+        notifyItemInserted(position);
     }
 
     public void updateTask(Task newTask){
@@ -63,7 +63,7 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void removeItem(int position) {
-        if (position >= 0 && position < getItemCount() - 1) {
+        if (position >= 0 && position <= getItemCount() - 1) {
             items.remove(position);
             notifyItemRemoved(position);
             if(position - 1 >= 0 && position<= getItemCount() -1){
@@ -73,7 +73,7 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
                     items.remove(position-1);
                     notifyItemRemoved(position-1);
                 }
-            } else if(getItemCount() - 1 >=0 && !getItem(getItemCount()-1).isTask()){
+            } else if(getItemCount() - 1 >= 0 && !getItem(getItemCount()-1).isTask()){
                 Separator separator = (Separator) getItem(getItemCount()-1);
                 checkSeparators(separator);
 
@@ -91,13 +91,13 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
                 containsSeparatorOverdue = false;
                 break;
          case Separator.TYPE_TODAY:
-                containsSeparatorOverdue = false;
+                containsSeparatorToday = false;
                 break;
          case Separator.TYPE_TOMORROW:
-                containsSeparatorOverdue = false;
+                containsSeparatorTomorrow = false;
                 break;
          case Separator.TYPE_FUTURE:
-                containsSeparatorOverdue = false;
+                containsSeparatorFuture = false;
                 break;
         }
     }
