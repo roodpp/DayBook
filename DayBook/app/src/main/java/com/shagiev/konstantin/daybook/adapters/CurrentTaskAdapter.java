@@ -69,7 +69,7 @@ public class CurrentTaskAdapter extends TaskAdapter {
 
             taskViewHolder.title.setText(task.getTitle());
             if (task.getDate() != 0) {
-                taskViewHolder.date.setText(Utils.getFullDate(new Date(task.getDate())));
+                taskViewHolder.date.setText(Utils.getFullDate(new Date(task.getDate()).getTime()));
             } else {
                 taskViewHolder.date.setText(null);
             }

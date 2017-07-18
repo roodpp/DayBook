@@ -8,6 +8,7 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -223,8 +224,22 @@ public class EditTaskDialogFragment extends DialogFragment {
         return alertDialog;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode != Activity.RESULT_OK) {
+            mEditTextDate.setText(null);
+            return;
+        }
+        if(requestCode == REQUEST_DATE){
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mCalendar.setTime(date);
+            mEditTextDate.setText(Utils.getDate(date));
+        }
+    }
+
 
     public interface EditingTaskListener{
         void onTaskEdited(Task task);
     }
+
 }

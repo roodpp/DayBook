@@ -9,8 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -22,11 +20,9 @@ import com.shagiev.konstantin.daybook.alarm.MyApplication;
 import com.shagiev.konstantin.daybook.database.DBHelper;
 import com.shagiev.konstantin.daybook.fragments.CurrentTasksFragment;
 import com.shagiev.konstantin.daybook.fragments.DoneTasksFragment;
-import com.shagiev.konstantin.daybook.fragments.SplashFragment;
 import com.shagiev.konstantin.daybook.fragments.TasksFragment;
 import com.shagiev.konstantin.daybook.fragments.dialog.AddingTaskDialogFragment;
 import com.shagiev.konstantin.daybook.fragments.dialog.EditTaskDialogFragment;
-import com.shagiev.konstantin.daybook.helper.PreferencesHelper;
 import com.shagiev.konstantin.daybook.model.Task;
 
 public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener,
@@ -34,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
 
     private FragmentManager mFragmentManager;
-    private PreferencesHelper mPreferencesHelper;
     private TabAdapter mTabAdapter;
     private TasksFragment mCurrentTasksFragment;
     private TasksFragment mDoneTasksFragment;
@@ -53,12 +48,7 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
         mFragmentManager = getFragmentManager();
 
-        PreferencesHelper.getInstance().init(getApplicationContext());
-        mPreferencesHelper = PreferencesHelper.getInstance();
-
         AlarmHelper.getInstance().init(getApplicationContext());
-
-        runSplash();
 
         setUI();
     }
@@ -80,39 +70,6 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         MyApplication.activityPaused();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem splashItem = menu.findItem(R.id.action_splash);
-        splashItem.setChecked(mPreferencesHelper.getBoolean(PreferencesHelper.SPLASH_IS_INVISIBLE));
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.action_splash) {
-            item.setChecked(!item.isChecked());
-            mPreferencesHelper.putBoolean(PreferencesHelper.SPLASH_IS_INVISIBLE, item.isChecked());
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void runSplash() {
-
-        if (!mPreferencesHelper.getBoolean(PreferencesHelper.SPLASH_IS_INVISIBLE)) {
-            SplashFragment splashFragment = new SplashFragment();
-
-            mFragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, splashFragment)
-                    .addToBackStack(null)
-                    .commit();
-        }
-    }
 
     private void setUI() {
 
@@ -185,12 +142,12 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     @Override
     public void onTaskAdded(Task task) {
         mCurrentTasksFragment.addTask(task, true);
-        Toast.makeText(this, "Дело добавлено", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.case_added), Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onTaskAddingCancel() {
-        Toast.makeText(this, "Дело не добавлено", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.case_not_added), Toast.LENGTH_LONG).show();
     }
 
     @Override
