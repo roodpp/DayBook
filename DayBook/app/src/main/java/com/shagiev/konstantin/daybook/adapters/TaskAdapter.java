@@ -117,12 +117,14 @@ public abstract class TaskAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         protected TextView title;
         protected TextView date;
+        protected TextView dayOfWeek;
         protected CircleImageView mCircleImageViewPriority;
 
-        public TaskViewHolder(View itemView, TextView title, TextView date, CircleImageView priority) {
+        public TaskViewHolder(View itemView, TextView title, TextView date, TextView dayOfWeek, CircleImageView priority) {
             super(itemView);
             this.title = title;
             this.date = date;
+            this.dayOfWeek = dayOfWeek;
             this.mCircleImageViewPriority = priority;
 
         }

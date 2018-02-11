@@ -108,10 +108,6 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
             }
         });
 
-        mCurrentTasksFragment = (CurrentTasksFragment) mTabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
-
-        mDoneTasksFragment = (DoneTasksFragment) mTabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
-
         mSearchView = (SearchView) findViewById(R.id.search_view);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -121,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                checkFragments();
                 mCurrentTasksFragment.findTasks(newText);
                 mDoneTasksFragment.findTasks(newText);
                 return false;
@@ -141,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
     @Override
     public void onTaskAdded(Task task) {
+        checkFragments();
         mCurrentTasksFragment.addTask(task, true);
         Toast.makeText(this, this.getString(R.string.case_added), Toast.LENGTH_LONG).show();
     }
@@ -152,17 +150,28 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
     @Override
     public void onTaskDone(Task task) {
+        checkFragments();
         mDoneTasksFragment.addTask(task, false);
     }
 
     @Override
     public void onTaskRestore(Task task) {
+        checkFragments();
         mCurrentTasksFragment.addTask(task, false);
     }
 
     @Override
     public void onTaskEdited(Task task) {
+        checkFragments();
         mCurrentTasksFragment.updateTask(task);
         mDBHelper.getDBManager().updateTask(task);
     }
+
+    private void checkFragments(){
+        if(mCurrentTasksFragment == null|| mDoneTasksFragment == null){
+            mCurrentTasksFragment = mTabAdapter.getFragment(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
+            mDoneTasksFragment = mTabAdapter.getFragment(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
+        }
+    }
+
 }

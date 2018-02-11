@@ -10,6 +10,6 @@
         android:gravity="center"
         android:textSize="16sp"
         android:textColor="@color/secondary_text_default_material_light"
-        android:id="@+id/tvSeparator"
+        android:id="@+id/tv_separator"
         />
 </RelativeLayout>

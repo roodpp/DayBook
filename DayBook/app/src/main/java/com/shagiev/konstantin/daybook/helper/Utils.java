@@ -26,6 +26,15 @@ public class Utils {
         return fullDateFormat.format(date);
     }
 
+    public static String getDayOfWeek(long date) {
+        Locale locale = new Locale("ru","RU");
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", locale);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(date));
+        String dayOfWeek = dayFormat.format(calendar.getTime());
+        return dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1);
+    }
+
     public static String getFullDateLocale(Date date){
         Locale locale = new Locale("ru","RU");
         DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, locale);

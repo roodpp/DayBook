@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.res.Resources;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,14 +41,15 @@ public class CurrentTaskAdapter extends TaskAdapter {
         switch (viewType) {
             case TYPE_TASK:
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.model_task, parent, false);
-                TextView title = (TextView) view.findViewById(R.id.tvTaskTitle);
-                TextView date = (TextView) view.findViewById(R.id.tvTaskDate);
-                CircleImageView priority = (CircleImageView) view.findViewById(R.id.cvTaskPriority);
+                TextView title = (TextView) view.findViewById(R.id.tv_task_title);
+                TextView date = (TextView) view.findViewById(R.id.tv_task_date);
+                TextView dayOfWeek = (TextView) view.findViewById(R.id.tv_task_day_of_week);
+                CircleImageView priority = (CircleImageView) view.findViewById(R.id.cv_task_priority);
 
-                return new TaskViewHolder(view, title, date, priority);
+                return new TaskViewHolder(view, title, date, dayOfWeek, priority);
             case TYPE_SEPARATOR:
                 View separator = LayoutInflater.from(parent.getContext()).inflate(R.layout.model_separator, parent, false);
-                TextView type = (TextView) separator.findViewById(R.id.tvSeparator);
+                TextView type = (TextView) separator.findViewById(R.id.tv_separator);
                 return new SeparatorViewHolder(separator, type);
             default:
                 return null;
@@ -70,8 +70,10 @@ public class CurrentTaskAdapter extends TaskAdapter {
             taskViewHolder.title.setText(task.getTitle());
             if (task.getDate() != 0) {
                 taskViewHolder.date.setText(Utils.getFullDate(new Date(task.getDate()).getTime()));
+                taskViewHolder.dayOfWeek.setText(Utils.getDayOfWeek(new Date(task.getDate()).getTime()));
             } else {
                 taskViewHolder.date.setText(null);
+                taskViewHolder.dayOfWeek.setText(null);
             }
             itemView.setVisibility(View.VISIBLE);
             taskViewHolder.mCircleImageViewPriority.setEnabled(true);
@@ -84,8 +86,9 @@ public class CurrentTaskAdapter extends TaskAdapter {
 
             taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_default_material_light));
             taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_default_material_light));
+            taskViewHolder.dayOfWeek.setTextColor(resources.getColor(R.color.secondary_text_default_material_light));
             taskViewHolder.mCircleImageViewPriority.setColorFilter(resources.getColor(task.getPriorityColor()));
-            taskViewHolder.mCircleImageViewPriority.setImageResource(R.drawable.ic_checkbox_blank_circle_grey600_48dp);
+            taskViewHolder.mCircleImageViewPriority.setImageResource(R.drawable.ic_blank_circle_black_24dp);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,10 +122,11 @@ public class CurrentTaskAdapter extends TaskAdapter {
 
                     taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_disabled_material_light));
                     taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_disabled_material_light));
+                    taskViewHolder.dayOfWeek.setTextColor(resources.getColor(R.color.secondary_text_disabled_material_light));
                     taskViewHolder.mCircleImageViewPriority.setColorFilter(resources.getColor(task.getPriorityColor()));
 
                     ObjectAnimator flipIn = ObjectAnimator.ofFloat(taskViewHolder.mCircleImageViewPriority, "rotationY", -180f, 0f);
-                    taskViewHolder.mCircleImageViewPriority.setImageResource(R.drawable.ic_checkbox_marked_circle_black_48dp);
+                    taskViewHolder.mCircleImageViewPriority.setImageResource(R.drawable.ic_check_circle_black_48dp);
 
                     flipIn.addListener(new Animator.AnimatorListener() {
                         @Override
