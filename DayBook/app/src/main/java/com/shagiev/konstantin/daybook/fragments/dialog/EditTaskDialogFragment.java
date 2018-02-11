@@ -146,6 +146,7 @@ public class EditTaskDialogFragment extends DialogFragment {
             }
         });
 
+        //TODO сделать аналогично DatePickerFragment
         mEditTextTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
