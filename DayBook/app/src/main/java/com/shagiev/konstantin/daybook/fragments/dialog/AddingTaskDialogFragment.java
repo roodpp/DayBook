@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TimePicker;
 
 import com.shagiev.konstantin.daybook.R;
 import com.shagiev.konstantin.daybook.alarm.AlarmHelper;
@@ -99,25 +98,13 @@ public class AddingTaskDialogFragment extends DialogFragment {
             }
         });
 
-        //TODO сделать аналогично DatePickerFragment
         mEditTextTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment timePickerFragment = new TimePickerFragment(){
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        mCalendar.set(Calendar.MINUTE, minute);
-                        mCalendar.set(Calendar.SECOND, 0);
-                        mEditTextTime.setText(Utils.getTime(mCalendar.getTime()));
-                    }
-
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        mEditTextTime.setText(null);
-                    }
-                };
-                timePickerFragment.show(getFragmentManager(), DIALOG_TIME);
+                FragmentManager fragmentManager = getFragmentManager();
+                DialogFragment dialog = TimePickerFragment.newInstance(mCalendar.getTime());
+                dialog.setTargetFragment(AddingTaskDialogFragment.this, REQUEST_TIME);
+                dialog.show(fragmentManager, DIALOG_TIME);
             }
         });
 
@@ -181,14 +168,23 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode != Activity.RESULT_OK) {
-            mEditTextDate.setText(null);
-            return;
-        }
         if(requestCode == REQUEST_DATE){
+            if(resultCode != Activity.RESULT_OK) {
+                mEditTextDate.setText(null);
+                return;
+            }
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCalendar.setTime(date);
             mEditTextDate.setText(Utils.getDate(date));
+        }
+        if(requestCode == REQUEST_TIME){
+            if(resultCode != Activity.RESULT_OK) {
+                mEditTextTime.setText(null);
+                return;
+            }
+            Date date = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
+            mCalendar.setTime(date);
+            mEditTextTime.setText(Utils.getTime(mCalendar.getTime()));
         }
     }
 
